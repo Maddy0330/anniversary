@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Happy 1st Anniversary Mamma Jaanu ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --pink:       #FF6FA8;
+  --pink-light: #FFD6E7;
+  --pink-pale:  #FFF0F6;
+  --lav:        #C9A8FF;
+  --lav-light:  #EDE0FF;
+  --mint:       #A8EDD4;
+  --peach:      #FFB07C;
+  --white:      #FFFCFE;
+  --text-dark:  #3A2040;
+  --text-mid:   #7A5080;
+  --radius-lg:  40px;
+  --shadow-lg:  0 16px 48px rgba(180,100,160,0.28);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  min-height: 100vh; font-family: 'Nunito', sans-serif;
+  color: var(--text-dark); overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, #FFD6E7 0%, transparent 60%),
+    radial-gradient(ellipse 60% 70% at 80% 80%, #EDE0FF 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, #DFFAF0 0%, transparent 70%),
+    #FFF0F6;
+}
+
+/* ============================================================
+   CHARACTER BACKGROUND
+   Drop these 6 files in the same folder as this HTML:
+   character-welcome.png  character-curious.png  character-sad.png
+   character-happy.png    character-cheer.png    character-hug.png
+============================================================ */
+.char-bg {
+  position: fixed; inset: 0; z-index: 1;
+  pointer-events: none;
+  /* overflow visible — never clip the character */
+  overflow: visible;
+}
+.char-bg img {
+  /* Anchor to bottom-right corner; constrain by BOTH dimensions
+     so the full character body is always visible */
+  position: absolute;
+  bottom: 0; right: 0;
+  width: auto; height: auto;
+  max-height: 78vh;   /* never taller than 78% of screen */
+  max-width:  36vw;   /* never wider than 36% of screen */
+  object-fit: contain;
+  opacity: 0.22;
+  filter: drop-shadow(0 0 40px rgba(255,111,168,0.22));
+  transition: opacity 0.5s ease;
+  user-select: none;
+}
+.char-bg .char-emoji {
+  font-size: clamp(120px, 22vw, 260px);
+  opacity: 0.1; position: absolute;
+  right: -10px; bottom: -10px; line-height: 1;
+}
+
+/* Mobile — smaller so card content is never blocked */
+@media (max-width: 600px) {
+  .char-bg img {
+    max-height: 38vh;
+    max-width:  52vw;
+    opacity: 0.18;
+    bottom: 0; right: 0;
+  }
+}
+/* Very small phones */
+@media (max-width: 360px) {
+  .char-bg img {
+    max-height: 30vh;
+    max-width:  55vw;
+    opacity: 0.15;
+  }
+}
+/* Landscape phones — move character to right edge, shorter */
+@media (max-height: 500px) and (orientation: landscape) {
+  .char-bg img {
+    max-height: 70vh;
+    max-width:  28vw;
+  }
+}
+.chibi-bounce { animation: chibiBounce 0.7s ease !important; }
+.chibi-shake  { animation: chibiShake 0.55s ease !important; }
+@keyframes chibiBounce {
+  0%,100% { transform: translateY(0) scale(1); }
+  30%     { transform: translateY(-24px) scale(1.04); }
+  60%     { transform: translateY(-10px) scale(1.08); }
+}
+@keyframes chibiShake {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-9px) rotate(-2deg); }
+  40%     { transform: translateX(9px) rotate(2deg); }
+  60%     { transform: translateX(-5px); }
+  80%     { transform: translateX(5px); }
+}
+
+/* ============================================================
+   FLOATING HEARTS
+============================================================ */
+.hearts-bg { position: fixed; inset: 0; pointer-events: none; z-index: 2; }
+.heart-float {
+  position: absolute; opacity: 0;
+  animation: floatHeart linear infinite;
+}
+@keyframes floatHeart {
+  0%   { transform: translateY(106vh) scale(0.6) rotate(-10deg); opacity:0; }
+  8%   { opacity:.6; }
+  92%  { opacity:.3; }
+  100% { transform: translateY(-12vh) scale(1.3) rotate(12deg); opacity:0; }
+}
+
+/* ============================================================
+   SCREENS
+============================================================ */
+.screen {
+  position: fixed; inset: 0; z-index: 10;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; pointer-events: none;
+  transition: opacity 0.65s ease;
+}
+.screen.active { opacity: 1; pointer-events: all; }
+
+/* ============================================================
+   CARD
+============================================================ */
+.card {
+  position: relative;
+  background: rgba(255,255,255,0.82);
+  backdrop-filter: blur(18px);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 2.5px solid rgba(255,182,210,0.5);
+  padding: 44px 40px 36px;
+  max-width: 540px; width: 100%;
+  text-align: center; z-index: 2;
+}
+.card-float { animation: cardFloat 4s ease-in-out infinite; }
+@keyframes cardFloat {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-7px); }
+}
+.welcome-glow {
+  position: absolute; inset: -5px;
+  border-radius: calc(var(--radius-lg) + 5px);
+  background: linear-gradient(135deg, #FFD6E7, #EDE0FF, #DFFAF0);
+  z-index: -1; animation: glowPulse 2.5s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%,100% { opacity:.6; filter: blur(7px); }
+  50%     { opacity:1;  filter: blur(12px); }
+}
+
+/* ============================================================
+   TYPOGRAPHY
+============================================================ */
+.title-main {
+  font-family: 'Pacifico', cursive;
+  font-size: clamp(1.4rem, 5vw, 2.1rem);
+  color: var(--pink); line-height: 1.25;
+  text-shadow: 0 2px 10px rgba(255,111,168,0.25);
+  margin-bottom: 12px;
+}
+.subtitle {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(1.05rem, 3.5vw, 1.35rem);
+  color: var(--text-mid); margin-bottom: 18px; line-height: 1.5;
+}
+.body-text { font-size: clamp(0.92rem,2.5vw,1.06rem); color: var(--text-mid); line-height: 1.75; }
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+.btn {
+  display: inline-block; padding: 13px 34px;
+  border: none; border-radius: 999px;
+  font-family: 'Nunito', sans-serif; font-size: 1rem; font-weight: 800;
+  cursor: pointer; letter-spacing: .3px;
+  transition: all .22s ease; position: relative; overflow: hidden;
+  box-shadow: 0 4px 18px rgba(255,111,168,.32);
+}
+.btn::after {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(255,255,255,.22);
+  transform: translateX(-110%) skewX(-10deg);
+  transition: transform .35s ease;
+}
+.btn:hover::after { transform: translateX(110%) skewX(-10deg); }
+.btn:hover  { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 28px rgba(255,111,168,.42); }
+.btn:active { transform: scale(.97); }
+.btn-primary   { background: linear-gradient(135deg, var(--pink), var(--peach)); color:#fff; }
+.btn-secondary { background: linear-gradient(135deg, var(--lav), var(--pink-light)); color: var(--text-dark); }
+.btn-mint      { background: linear-gradient(135deg, var(--mint), #6DCBAA); color: var(--text-dark); }
+.btn-wrong     { background: linear-gradient(135deg, #FF8E8E, #FFB07C); color:#fff; }
+
+/* ============================================================
+   QUIZ
+============================================================ */
+.progress-label { font-size:.83rem; font-weight:700; color: var(--text-mid); margin-bottom:6px; text-align:right; }
+.progress-bar-wrap { background: var(--pink-light); border-radius:999px; height:9px; margin-bottom:22px; overflow:hidden; }
+.progress-bar-fill {
+  height:100%; background: linear-gradient(90deg, var(--pink), var(--peach));
+  border-radius:999px; transition: width .5s ease;
+}
+.question-text {
+  font-size: clamp(1rem,3vw,1.15rem); font-weight:800; color: var(--text-dark);
+  margin-bottom:20px; line-height:1.55; min-height:52px;
+}
+.options-grid { display:grid; grid-template-columns:1fr 1fr; gap:11px; margin-bottom:8px; }
+@media (max-width:400px) { .options-grid { grid-template-columns:1fr; } }
+
+.option-btn {
+  background: var(--white); border: 2.5px solid var(--pink-light);
+  border-radius:16px; padding:12px 10px;
+  font-family:'Nunito',sans-serif; font-size:.9rem; font-weight:700;
+  color: var(--text-dark); cursor:pointer;
+  transition: all .18s ease; text-align:left; line-height:1.4;
+}
+.option-btn .letter {
+  display:inline-block; background: var(--pink-light); color: var(--pink);
+  border-radius:8px; width:22px; height:22px; line-height:22px;
+  text-align:center; font-size:.75rem; font-weight:900; margin-right:6px;
+}
+.option-btn:hover { border-color: var(--pink); background: var(--pink-pale); transform: scale(1.02); }
+.option-btn:disabled { pointer-events:none; opacity:.4; }
+
+/* Feedback slide inside quiz card */
+.quiz-panel, .fb-panel { transition: opacity .35s ease; }
+.quiz-panel.hide { opacity:0; pointer-events:none; height:0; overflow:hidden; }
+.fb-panel.hide   { opacity:0; pointer-events:none; height:0; overflow:hidden; }
+.fb-emoji { font-size:3.5rem; margin-bottom:10px; }
+.fb-title { font-family:'Pacifico',cursive; font-size:1.3rem; margin-bottom:10px; }
+.fb-title.ok  { color:#3AA876; }
+.fb-title.err { color:#E05050; }
+.fb-msg { font-size:1rem; font-weight:700; color: var(--text-mid); line-height:1.65; margin-bottom:22px; }
+
+/* ============================================================
+   UNLOCK
+============================================================ */
+.unlock-title {
+  font-family:'Pacifico',cursive;
+  font-size: clamp(1.3rem,4vw,1.9rem); color: var(--pink); margin-bottom:12px;
+}
+.confetti-piece {
+  position:fixed; top:-12px; border-radius:3px; z-index:5; pointer-events:none;
+  animation: confettiFall linear forwards;
+}
+@keyframes confettiFall { to { transform: translateY(110vh) rotate(720deg); opacity:0; } }
+
+/* ============================================================
+   SLIDESHOW
+============================================================ */
+#screen-slideshow .card { max-width:700px; padding:22px 20px 20px; animation:none; }
+.ss-love-bar {
+  background: linear-gradient(135deg,rgba(255,111,168,.15),rgba(201,168,255,.15));
+  border:2px solid var(--pink-light); border-radius:14px;
+  padding:9px 14px; font-family:'Dancing Script',cursive;
+  font-size:1.15rem; color: var(--pink); font-weight:700; margin-bottom:14px;
+}
+.ss-frame {
+  position:relative; border-radius:20px; overflow:hidden;
+  background: linear-gradient(135deg, var(--pink-light), var(--lav-light));
+  aspect-ratio:4/3; margin-bottom:10px;
+  box-shadow: 0 6px 24px rgba(180,100,160,.22);
+  display:flex; align-items:center; justify-content:center;
+}
+/* 👉 PHOTOS: add memory1.jpg, memory2.jpg … to the PHOTOS array in JS below.
+   Place image files in same folder as this HTML. */
+.ss-frame img {
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; border-radius:20px;
+  opacity:0; transition: opacity .7s ease; pointer-events:none;
+}
+.ss-frame img.active { opacity:1; }
+.ss-placeholder {
+  position:absolute; inset:0;
+  display:none; flex-direction:column; align-items:center;
+  justify-content:center; color: var(--text-mid);
+  font-size:.88rem; text-align:center; padding:20px;
+}
+.ss-placeholder.active { display:flex; }
+.ss-placeholder .ph-icon { font-size:3rem; margin-bottom:8px; }
+
+.ss-caption-box {
+  min-height:40px; font-family:'Dancing Script',cursive;
+  font-size:1.1rem; color: var(--text-dark); font-weight:700;
+  margin-bottom:8px; line-height:1.5;
+  transition: opacity .5s ease;
+}
+.ss-bottom-row {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px; flex-wrap:wrap;
+}
+.ss-counter { font-size:.78rem; font-weight:700; color: var(--text-mid); }
+.ss-dots { display:flex; gap:5px; flex-wrap:wrap; justify-content:center; margin-bottom:8px; }
+.dot { width:7px; height:7px; border-radius:50%; background: var(--pink-light); cursor:pointer; transition: all .2s; }
+.dot.active { background: var(--pink); transform:scale(1.5); }
+.music-btn {
+  background:rgba(255,255,255,.7); border:2px solid var(--lav);
+  border-radius:999px; padding:7px 18px;
+  font-family:'Nunito',sans-serif; font-size:.82rem; font-weight:800;
+  color: var(--text-mid); cursor:pointer; transition: all .2s;
+  display:inline-flex; align-items:center; gap:5px;
+}
+.music-btn:hover { background: var(--lav-light); }
+
+/* ============================================================
+   FINAL SCREEN
+============================================================ */
+#screen-final .card { max-width:580px; max-height:92vh; overflow-y:auto; scrollbar-width:none; animation: cardFloat 4s ease-in-out infinite; }
+#screen-final .card::-webkit-scrollbar { display:none; }
+.final-title {
+  font-family:'Pacifico',cursive;
+  font-size: clamp(1.2rem,4vw,1.75rem);
+  color: var(--pink); margin-bottom:16px;
+  text-shadow: 0 2px 10px rgba(255,111,168,.3);
+}
+.final-message {
+  font-size: clamp(.9rem,2.4vw,1.03rem);
+  color: var(--text-mid); line-height:1.9; margin-bottom:22px; text-align:left;
+}
+.final-message .line { display:block; margin-bottom:3px; }
+.floating-hearts-f { position:absolute; inset:0; pointer-events:none; overflow:hidden; border-radius: var(--radius-lg); }
+.fheart { position:absolute; animation: fheartAnim ease-in-out infinite; }
+@keyframes fheartAnim {
+  0%,100% { transform:translateY(0) scale(1); opacity:.65; }
+  50%     { transform:translateY(-18px) scale(1.25); opacity:1; }
+}
+
+/* Sparkles */
+.sparkle {
+  position:fixed; font-size:1rem; pointer-events:none; z-index:30;
+  animation: sparkleAnim 1.4s ease-out forwards;
+}
+@keyframes sparkleAnim {
+  0%   { transform:scale(0) rotate(0deg); opacity:1; }
+  100% { transform:scale(1.8) rotate(200deg) translateY(-40px); opacity:0; }
+}
+
+/* Responsive */
+@media (max-width:500px) {
+  .card { padding:28px 18px 24px; }
+  .btn  { padding:11px 24px; font-size:.95rem; }
+  #screen-slideshow .card { padding:14px 10px 14px; }
+}
+.mt8  { margin-top:8px; }
+.mt16 { margin-top:16px; }
+</style>
+</head>
+<body>
+
+<!-- Floating hearts -->
+<div class="hearts-bg" id="heartsContainer"></div>
+
+<!-- ============================================================
+     CHARACTER BACKGROUND
+     👉 Drop these 6 PNG files in the same folder as this HTML:
+        character-welcome.png  character-curious.png  character-sad.png
+        character-happy.png    character-cheer.png    character-hug.png
+============================================================ -->
+<div class="char-bg" id="charBg">
+  <img id="charImg" src="character-welcome.png" alt=""
+       onerror="this.style.display='none';document.getElementById('charEmoji').style.display='block'"/>
+  <div id="charEmoji" class="char-emoji" style="display:none;">🧒</div>
+</div>
+
+<!-- 👉 MUSIC: Replace anniversary-music.mp3 with your audio file (same folder) -->
+<audio id="bgMusic" loop>
+  <source src="anniversary-music.mp3" type="audio/mpeg"/>
+</audio>
+
+<!-- ============================================================  SCREEN 1 — WELCOME ============================================================ -->
+<div class="screen active" id="screen-welcome">
+  <div class="card card-float">
+    <div class="welcome-glow"></div>
+    <div style="font-size:2rem;margin-bottom:12px;">🌸💐🤍</div>
+    <h1 class="title-main">Happy 1st Anniversary<br/>Mamma Jaanu ❤️🤍😘🧿</h1>
+    <p class="subtitle">"I have an awesome surprise for you in here...<br/>Be sure to hold on 🤭"</p>
+    <p class="body-text">A little adventure awaits before the memories unlock.<br/>Let's see how well you know us 💞</p>
+    <div class="mt16">
+      <button class="btn btn-primary" onclick="startQuiz()">Shall We Mamma? 🌸</button>
+    </div>
+    <div style="margin-top:16px;font-size:1.3rem;opacity:.5;">❤️ 🤍 ❤️ 🤍 ❤️ 🤍 ❤️</div>
+  </div>
+</div>
+
+<!-- ============================================================  SCREEN 2 — QUIZ ============================================================ -->
+<div class="screen" id="screen-quiz">
+  <div class="card" style="min-height:340px;position:relative;">
+
+    <!-- Question panel -->
+    <div id="quizPanel" class="quiz-panel">
+      <div class="progress-label" id="progressLabel">Question 1 of 5</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:20%"></div>
+      </div>
+      <p class="question-text" id="questionText"></p>
+      <div class="options-grid" id="optionsGrid"></div>
+    </div>
+
+    <!-- Feedback panel — swaps in after answer, no correct revealed -->
+    <div id="fbPanel" class="fb-panel hide" style="padding-top:10px;">
+      <div class="fb-emoji" id="fbEmoji"></div>
+      <div class="fb-title" id="fbTitle"></div>
+      <p class="fb-msg" id="fbMsg"></p>
+      <button class="btn" id="fbBtn" onclick="handleFbBtn()"></button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================  SCREEN 3 — UNLOCK ============================================================ -->
+<div class="screen" id="screen-unlock">
+  <div class="card card-float">
+    <div style="font-size:3.5rem;margin-bottom:10px;">🎉💞🎊</div>
+    <h2 class="unlock-title">You Unlocked Our Memories 💞</h2>
+    <p class="body-text">You remembered everything so beautifully 😘<br/>Now get ready Jaanu this is just for you, Mamma Jaanu 🫂</p>
+    <div class="mt16">
+      <button class="btn btn-mint" onclick="openSlideshow()">View Memories 📸</button>
+    </div>
+    <div style="margin-top:14px;font-size:1.2rem;">🌸✨💫🌸✨</div>
+  </div>
+</div>
+
+<!-- ============================================================  SCREEN 4 — SLIDESHOW ============================================================ -->
+<div class="screen" id="screen-slideshow">
+  <div class="card">
+    <div class="ss-love-bar">I Lubyuu Mamma Jaanu ❤️🤍🫂🧿</div>
+    <div class="ss-frame" id="ssFrame"></div>
+    <div class="ss-dots" id="ssDots"></div>
+    <div class="ss-caption-box" id="ssCaption"></div>
+    <div class="ss-bottom-row">
+      <span class="ss-counter" id="ssCounter">1 / 1</span>
+      <button class="music-btn" id="musicBtn" onclick="toggleMusic()">⏸ Pause Music</button>
+    </div>
+    <div class="mt8">
+      <button class="btn btn-primary" onclick="goToFinal()">Finish 🫂</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================  SCREEN 5 — FINAL ============================================================ -->
+<div class="screen" id="screen-final">
+  <div class="card" style="max-width:580px;">
+    <div class="floating-hearts-f" id="floatingHeartsF"></div>
+    <div style="font-size:2.8rem;margin-bottom:10px;">🫂💞🥺</div>
+    <h2 class="final-title">Always & Forever, Mamma Jaanu 🧿</h2>
+
+    <!-- 💬 HEARTFELT MESSAGE -->
+    <div class="final-message">
+      <span class="line">Mamma You Will Always Be My Special Person No Matter What.</span>
+      <span class="line">You Will Always Have A Home As Long As I'm Alive 🫂😘</span>
+      <br/>
+      <span class="line">Once Again Happy 1st Year Anniversary Maazilla 🦖😘💞</span>
+      <br/>
+      <span class="line">Come To Me As Soon As Possible Couz Your Kanda Mari Misses You A Lot 🥺🥺</span>
+      <span class="line">But He Will Wait For His Mamma Cho You Don't Worry About Him Okay Na.</span>
+      <br/>
+      <span class="line">Enjoy Your Trip There Mamma I Will Be Here For You 💞🧿</span>
+      <span class="line">Lubyuu Baby Jaanu ❤️🤍</span>
+    </div>
+
+    <div style="font-size:1.1rem;letter-spacing:4px;opacity:.75;margin-bottom:20px;">❤️🤍❤️🤍❤️🤍❤️🤍❤️</div>
+    <button class="btn btn-primary" onclick="replayMemories()">Replay Memories 🔁💞</button>
+
+    <p style="opacity:0.2;font-size:12px;">
+    If you scrolled this far… you are my forever safe place ❤️
+    </p>
+
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   QUIZ DATA
+============================================================ */
+const quizData = [
+  {
+    q: "When was the first VC with me that we talked?",
+    opts: ["19th April 2025","24th April 2025","7th May 2025","9th May 2025"],
+    ans: 2,
+    wrong: "You seriously don't know this 😒",
+    right: "Aww my muddu remembers 😘"
+  },
+  {
+    q: "What was the First Gift I gave you?",
+    opts: ["Memory Craft","Bracelet","Hair Clip","Stuffed Toy"],
+    ans: 1,
+    wrong: "Vaa U forgot this haa 😞",
+    right: "Aww Nan Muddu Mamma Jaanu ❤️🤍"
+  },
+  {
+    q: "Mamma Jaanu do you remember when I first called you Baby Jaanu?",
+    opts: ["3rd Jan 2026","16th Jan 2026","2nd Feb 2026","11th Feb 2026"],
+    ans: 2,
+    wrong: "Its okay chweetheart ik you don't remember this but u will know choon keep it in mind okay ❤️",
+    right: "Aww You got it right 🫂 Nan Baby Jaanu 💞"
+  },
+  {
+    q: "What was the first thing I gave you on your Bday?",
+    opts: ["Flower Bouquet","Gifts","Scoldings","Hug"],
+    ans: 3,
+    wrong: "Ik you will remember this but slight confusion Asthe",
+    right: "Nan Muddu Muddu Muddu nee ❤️🤍"
+  },
+  {
+    q: "Last Question Aytha: When Did you first put the big bomb on me?",
+    opts: ["9th May 2025","5th May 2025","15th May 2025","22nd May 2025"],
+    ans: 0,
+    wrong: "You FORGOT this THIS???? How 😒",
+    right: 'Obviously you remember this "That sticker i send ala hudgidu adu hako eli" 🤭🤭'
+  }
+];
+
+/* ============================================================
+   PHOTOS — Add your filenames here!
+   👉 Place all image files in the same folder as this HTML.
+   Example: add "memory11.jpg","memory12.jpg" etc. to the array.
+============================================================ */
+const PHOTOS = [
+  "memory1.jpg","memory2.jpg","memory3.jpg","memory4.jpg","memory5.jpg",
+  "memory6.jpg","memory7.jpg","memory8.jpg","memory9.jpg","memory10.jpg"
+];
+
+/* ============================================================
+   5 CAPTIONS — split evenly across all photos
+============================================================ */
+const CAPTIONS = [
+  "Feel free to relax and watch Kandamma 🫂",
+  "Don't cry aytha mamma I'm in ur Heart and u r in Mine 💞",
+  "Full Nodi Admele Call Me and Say How was this antha aytha",
+  "Every memory we made is my most treasured thing 🧿",
+  "Forever your Kanda Mari ❤️🤍"
+];
+
+/* ============================================================
+   CHARACTER MAP
+   👉 6 images — drop them in same folder:
+      character-welcome.png  character-curious.png  character-sad.png
+      character-happy.png    character-cheer.png    character-hug.png
+============================================================ */
+const CHAR = {
+  welcome: "character-welcome.png",
+  curious: "character-curious.png",
+  sad:     "character-sad.png",
+  happy:   "character-happy.png",
+  cheer:   "character-cheer.png",
+  hug:     "character-hug.png"
+};
+
+/* ─── STATE ──────────────────────────────────────────────── */
+let qIndex = 0, lastCorrect = false;
+let slide = 0, ssTimer = null, totalSlides = PHOTOS.length;
+let musicOn = false;
+
+/* ─── INIT ───────────────────────────────────────────────── */
+window.onload = () => { initHearts(); buildSlideshow(); };
+
+/* ─── HEARTS ─────────────────────────────────────────────── */
+function initHearts() {
+  const c = document.getElementById('heartsContainer');
+  const e = ['❤️','🤍','💞','🌸','✨','🧿','🫂','💖','❣️'];
+  for (let i=0;i<24;i++){
+    const h=document.createElement('div'); h.className='heart-float';
+    h.textContent=e[~~(Math.random()*e.length)];
+    h.style.cssText=`left:${Math.random()*100}vw;font-size:${.75+Math.random()*1.1}rem;animation-duration:${7+Math.random()*12}s;animation-delay:${Math.random()*16}s;`;
+    c.appendChild(h);
+  }
+}
+
+/* ─── CHARACTER ──────────────────────────────────────────── */
+function setChar(state, anim) {
+  const img = document.getElementById('charImg');
+  img.classList.remove('chibi-bounce','chibi-shake');
+  void img.offsetWidth;
+  img.src = CHAR[state] || CHAR.welcome;
+  if (anim==='bounce') img.classList.add('chibi-bounce');
+  if (anim==='shake')  img.classList.add('chibi-shake');
+}
+
+/* ─── SCREENS ────────────────────────────────────────────── */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ─── SPARKLES ───────────────────────────────────────────── */
+function spawnSparkles() {
+  const e=['✨','⭐','💫','🌟','🩷'];
+  for(let i=0;i<8;i++){
+    const s=document.createElement('div'); s.className='sparkle';
+    s.textContent=e[~~(Math.random()*e.length)];
+    s.style.left=(25+Math.random()*50)+'vw';
+    s.style.top =(25+Math.random()*50)+'vh';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),1500);
+  }
+}
+
+/* ─── CONFETTI ───────────────────────────────────────────── */
+function launchConfetti() {
+  const cols=['#FF6FA8','#FFB07C','#C9A8FF','#A8EDD4','#FFE580','#fff'];
+  for(let i=0;i<90;i++){
+    const c=document.createElement('div'); c.className='confetti-piece';
+    c.style.cssText=`left:${Math.random()*100}vw;width:${6+Math.random()*8}px;height:${10+Math.random()*14}px;background:${cols[~~(Math.random()*cols.length)]};animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*1.2}s;transform:rotate(${Math.random()*360}deg);`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),5500);
+  }
+}
+
+/* ─── QUIZ ───────────────────────────────────────────────── */
+function startQuiz() {
+  qIndex=0; setChar('curious');
+  showScreen('screen-quiz'); renderQ();
+  // ── Start music from Screen 1 on first user interaction ──
+  // Browsers require a user gesture before audio plays.
+  // "Shall We Mamma?" tap IS that gesture — music starts here
+  // and plays continuously through every screen.
+  tryPlayMusic();
+}
+
+function renderQ() {
+  document.getElementById('quizPanel').classList.remove('hide');
+  document.getElementById('fbPanel').classList.add('hide');
+  const d=quizData[qIndex];
+  document.getElementById('progressLabel').textContent=`Question ${qIndex+1} of 5`;
+  document.getElementById('progressFill').style.width=((qIndex+1)/5*100)+'%';
+  document.getElementById('questionText').textContent=d.q;
+  const g=document.getElementById('optionsGrid'); g.innerHTML='';
+  ['A','B','C','D'].forEach((L,i)=>{
+    const b=document.createElement('button'); b.className='option-btn';
+    b.innerHTML=`<span class="letter">${L}</span>${d.opts[i]}`;
+    b.onclick=()=>pickAnswer(i);
+    g.appendChild(b);
+  });
+}
+
+function pickAnswer(i) {
+  // Disable all — NO colour change, NO reveal of correct answer
+  document.querySelectorAll('.option-btn').forEach(b=>b.disabled=true);
+  const d=quizData[qIndex];
+  lastCorrect=(i===d.ans);
+
+  setTimeout(()=>{
+    document.getElementById('quizPanel').classList.add('hide');
+    const fb=document.getElementById('fbPanel');
+    document.getElementById('fbEmoji').textContent = lastCorrect ? '🥰' : '😔';
+
+    const title=document.getElementById('fbTitle');
+    title.textContent = lastCorrect ? 'Correct! 🎉' : 'Oops! Try Again 🤧';
+    title.className   = 'fb-title '+(lastCorrect?'ok':'err');
+
+    document.getElementById('fbMsg').textContent = lastCorrect ? d.right : d.wrong;
+
+    const btn=document.getElementById('fbBtn');
+    btn.textContent = lastCorrect
+      ? (qIndex<4 ? 'Next Question ➡️' : 'Unlock Memories 💞')
+      : 'Try Again 🔁';
+    btn.className='btn '+(lastCorrect?'btn-primary':'btn-wrong');
+
+    fb.classList.remove('hide');
+    if(lastCorrect){ setChar('happy','bounce'); spawnSparkles(); }
+    else            setChar('sad','shake');
+  },280);
+}
+
+function handleFbBtn() {
+  if(lastCorrect){
+    qIndex++;
+    if(qIndex<5){ setChar('curious'); renderQ(); }
+    else showUnlock();
+  } else {
+    setChar('curious'); renderQ();
+  }
+}
+
+/* ─── UNLOCK ─────────────────────────────────────────────── */
+function showUnlock() {
+  showScreen('screen-unlock');
+  setChar('cheer','bounce');
+  launchConfetti(); spawnSparkles();
+}
+
+/* ─── BUILD SLIDESHOW DOM ────────────────────────────────── */
+function buildSlideshow() {
+  const frame=document.getElementById('ssFrame');
+  frame.innerHTML=''; totalSlides=PHOTOS.length;
+  PHOTOS.forEach((src,i)=>{
+    const img=document.createElement('img');
+    img.src=src; img.alt=`Memory ${i+1}`;
+    if(i===0) img.classList.add('active');
+
+    const ph=document.createElement('div');
+    ph.className='ss-placeholder'+(i===0?' active':'');
+    ph.innerHTML=`<div class="ph-icon">📸</div><p>Memory ${i+1}<br/><small>${src}</small></p>`;
+
+    img.onload=()=>{ph.classList.remove('active'); ph.style.display='none';};
+    img.onerror=()=>{ img.style.display='none'; if(i===0) ph.classList.add('active'); };
+
+    frame.appendChild(ph);
+    frame.appendChild(img);
+  });
+  buildDots();
+  updateCaption(0);
+  document.getElementById('ssCounter').textContent=`1 / ${totalSlides}`;
+}
+
+function buildDots() {
+  const w=document.getElementById('ssDots'); w.innerHTML='';
+  PHOTOS.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(i===0?' active':'');
+    d.onclick=()=>{clearInterval(ssTimer); goSlide(i); startAuto();};
+    w.appendChild(d);
+  });
+}
+
+/* Caption distribution — 5 captions across N photos */
+function updateCaption(idx) {
+  const ci=Math.min(Math.floor(idx/totalSlides*CAPTIONS.length), CAPTIONS.length-1);
+  const box=document.getElementById('ssCaption');
+  box.style.opacity=0;
+  setTimeout(()=>{ box.textContent=CAPTIONS[ci]; box.style.opacity=1; },300);
+}
+
+function goSlide(idx) {
+  slide=idx;
+  document.querySelectorAll('#ssFrame img').forEach((img,i)=>img.classList.toggle('active',i===idx));
+  document.querySelectorAll('#ssFrame .ss-placeholder').forEach((ph,i)=>ph.classList.toggle('active',i===idx));
+  document.querySelectorAll('#ssDots .dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  document.getElementById('ssCounter').textContent=`${idx+1} / ${totalSlides}`;
+  updateCaption(idx);
+}
+
+function startAuto() {
+  clearInterval(ssTimer);
+  ssTimer=setInterval(()=>goSlide((slide+1)%totalSlides), 1500);
+}
+
+/* ─── MUSIC HELPERS ──────────────────────────────────────── */
+// Tries to play audio and syncs the pause/play button state.
+// Safe to call multiple times — won't restart if already playing.
+function tryPlayMusic() {
+  const a = document.getElementById('bgMusic');
+  const b = document.getElementById('musicBtn');
+  if (musicOn) return;           // already playing — do nothing
+  a.currentTime = musicOn ? a.currentTime : 0;   // start from beginning first time
+  a.play().then(() => {
+    musicOn = true;
+    if (b) b.textContent = '⏸ Pause Music';
+  }).catch(() => {
+    // autoplay blocked (rare after user gesture) — show Play button
+    musicOn = false;
+    if (b) b.textContent = '🎵 Play Music';
+  });
+}
+
+/* ─── OPEN SLIDESHOW — music continues (already started at Screen 1) ─── */
+function openSlideshow() {
+  showScreen('screen-slideshow');
+  setChar('happy','bounce');
+  goSlide(0); startAuto();
+  // Music was started at Screen 1; just ensure it's playing
+  // (handles edge case where autoplay was initially blocked)
+  tryPlayMusic();
+}
+
+function toggleMusic() {
+  const a=document.getElementById('bgMusic');
+  const b=document.getElementById('musicBtn');
+  if(musicOn){ a.pause(); b.textContent='🎵 Play Music'; musicOn=false; }
+  else        { a.play().catch(()=>{}); b.textContent='⏸ Pause Music'; musicOn=true; }
+}
+
+/* Swipe support */
+let tx=0;
+document.addEventListener('touchstart',e=>{ if(document.getElementById('screen-slideshow').classList.contains('active')) tx=e.changedTouches[0].screenX; });
+document.addEventListener('touchend',e=>{
+  if(!document.getElementById('screen-slideshow').classList.contains('active')) return;
+  const dx=e.changedTouches[0].screenX-tx;
+  if(Math.abs(dx)>40){ clearInterval(ssTimer); dx<0?goSlide((slide+1)%totalSlides):goSlide((slide-1+totalSlides)%totalSlides); startAuto(); }
+});
+
+/* ─── FINAL ──────────────────────────────────────────────── */
+function goToFinal() {
+  clearInterval(ssTimer);
+  const a=document.getElementById('bgMusic'); a.pause(); musicOn=false;
+  showScreen('screen-final');
+  setChar('hug','bounce');
+  launchConfetti(); spawnSparkles(); spawnFinalHearts();
+}
+
+function spawnFinalHearts() {
+  const c=document.getElementById('floatingHeartsF'); c.innerHTML='';
+  const e=['❤️','🤍','💞','💖','🫂','🌸','✨','🧿'];
+  [[10,80],[22,18],[44,82],[58,12],[78,68],[14,48],[91,38],[36,62],[70,28],[50,5]].forEach(([x,y],i)=>{
+    const h=document.createElement('div'); h.className='fheart';
+    h.textContent=e[i%e.length];
+    h.style.cssText=`left:${x}%;top:${y}%;font-size:${1+Math.random()*.8}rem;animation-delay:${Math.random()*2}s;animation-duration:${2.2+Math.random()*2}s;`;
+    c.appendChild(h);
+  });
+}
+
+function replayMemories() { openSlideshow(); }
+
+/* Keyboard nav in slideshow */
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('screen-slideshow').classList.contains('active')) return;
+  if(e.key==='ArrowRight'){ clearInterval(ssTimer); goSlide((slide+1)%totalSlides); startAuto(); }
+  if(e.key==='ArrowLeft') { clearInterval(ssTimer); goSlide((slide-1+totalSlides)%totalSlides); startAuto(); }
+});
+</script>
+</body>
+</html>
